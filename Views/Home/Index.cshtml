@@ -1,0 +1,98 @@
+﻿@using WeatherApp.Helpers
+@{
+    ViewData["Title"] = "SkyWatch";
+}
+
+<div class="container text-center">
+    <h1 class="display-4">SkyWatch</h1>
+    <p class="lead">Discover weather updates for cities across the country!</p>
+
+    <!-- Search Bar -->
+    <form method="post" asp-action="Search" class="mb-4">
+        <div class="input-group w-50 mx-auto">
+            <input type="text" class="form-control" name="city" placeholder="Enter city name" required>
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+
+    <!-- City Weather Cards -->
+    <div id="cityWeatherCarousel" class="carousel slide mt-5 mx-auto" data-bs-ride="carousel" data-bs-interval="3000"
+        style="max-width: 1500px;">
+        <div class="carousel-inner">
+            @if (ViewBag.WeatherInfoList != null)
+            {
+                var weatherInfoList = (List<WeatherApp.Models.WeatherInfo>)ViewBag.WeatherInfoList;
+                var favorites = ViewBag.Favorites as List<string>;
+
+                var groups = weatherInfoList
+                .Select((weather, index) => new { weather, index })
+                .GroupBy(x => x.index / 5)
+                .Select(group => group.Select(x => x.weather).ToList())
+                .ToList();
+
+                var isActive = true;
+                foreach (var group in groups)
+                {
+                    <div class="carousel-item @(isActive ? "active" : "")">
+                        <div class="row justify-content-center gx-5 gy-5">
+                            @foreach (var cityWeather in group)
+                            {
+                                <div class="col-md-2">
+                                    <div class="card text-center position-relative">
+                                        <img src="~/images/weather/@IconHelper.GetLocalIcon(cityWeather.Icon)" class="card-img-top"
+                                            alt="@cityWeather.City Weather" />
+                                        <div class="card-body">
+                                            <h5 class="card-title">@cityWeather.City</h5>
+                                            <p class="card-text">@cityWeather.Description</p>
+                                            <p class="card-text">Temperature: @cityWeather.Temperature°C</p>
+
+
+                                        </div>
+
+                                        <button class="btn btn-light favorite-btn position-absolute"
+                                            style="top: 10px; right: 10px; z-index: 1000;"
+                                            onclick="toggleFavorite('@cityWeather.City')">
+                                            <img src="~/images/icons/star-grey.png" alt="Favorite" style="height: 24px;"
+                                                id="favoriteIcon-@cityWeather.City" />
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    isActive = false;
+                }
+            }
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#cityWeatherCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#cityWeatherCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+</div>
+
+<script>
+    function toggleFavorite(city) {
+        const data = { CityName: city }; 
+        fetch('@Url.Action("AddToFavorites", "Home")', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById(`favoriteIcon-${city}`).src = "/images/icons/star-yellow.png";
+                    alert(`${city} has been added to your favorites!`);
+                } else if (data.redirectUrl) {
+                    alert('Please log in to add to favorites.');
+                    window.location.href = data.redirectUrl;
+                } else {
+                    alert(data.message || 'An error occurred while adding to favorites.');
+                }
+            })
+            .catch(error => console.error('Error adding to favorites:', error));
+    }
+</script>

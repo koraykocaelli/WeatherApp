@@ -1,0 +1,126 @@
+h1 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #34495e;
+}
+
+p.lead {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.2rem;
+  color: #7f8c8d;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem; 
+  justify-content: center; 
+}
+
+.col-md-2, .col-md-3 {
+  flex: 1 1 calc(25% - 1rem); 
+  max-width: 250px; 
+}
+
+
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 8px;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  margin-bottom: 1rem; 
+  width: 100%; 
+  height: auto; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: space-between; 
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.card img, .card-img-top {
+  border-radius: 8px 8px 0 0;
+  height: 80px; 
+  object-fit: contain;
+  display: block;
+  margin: auto;
+}
+
+.card img:hover {
+  opacity: 0.85;
+}
+
+
+.favorite-icon {
+  height: 14px; 
+  margin-right: 5px;
+}
+
+
+.btn-danger {
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 15px; 
+  padding: 6px 10px; 
+  font-size: 0.75rem; 
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-danger:hover {
+  background-color: #c0392b;
+  transform: scale(1.1); 
+}
+
+
+.carousel-inner .row {
+  gap: 1rem; 
+  justify-content: center;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  padding: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 5%;
+  transition: transform 0.3s ease-in-out;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  transform: scale(1.1);
+}
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+body {
+  background-color: #ecf0f1;
+  padding-bottom: 50px;
+}
+
+.container {
+  animation: fadeInUp 1s ease-out;
+}

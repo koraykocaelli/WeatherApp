@@ -1,0 +1,29 @@
+@{
+    ViewData["Title"] = "Favorite Cities";
+}
+
+<h2>Your Favorite Cities</h2>
+
+<div class="container text-center mt-5">
+    <div class="row">
+        @if (ViewBag.WeatherInfoList != null)
+        {
+            foreach (var cityWeather in ViewBag.WeatherInfoList)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="~/images/weather/@cityWeather.Icon.jpg" class="card-img-top" alt="@cityWeather.CityName Weather">
+                        <div class="card-body">
+                            <h5 class="card-title">@cityWeather.CityName</h5>
+                            <p class="card-text">@cityWeather.WeatherInfo</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>No favorite cities found. Add some to see weather updates!</p>
+        }
+    </div>
+</div>

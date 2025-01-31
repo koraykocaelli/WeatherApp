@@ -1,0 +1,74 @@
+@using WeatherApp.Helpers
+@model WeatherApp.Models.User
+
+
+
+<div class="container">
+    <h1 class="text-center mt-4" style="color: #34495e; font-family: 'Roboto', sans-serif; font-weight: bold;">
+        Welcome, @Model.Name @Model.Surname
+    </h1>
+    <h3 class="text-center mt-2" style="color: #7f8c8d; font-family: 'Roboto', sans-serif;">
+        Your Favorite Cities
+    </h3>
+
+    <!-- Success Message -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success text-center mt-3">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <!-- Favorite Cities -->
+    <div class="row mt-4 justify-content-center">
+        @if (ViewBag.WeatherInfoList != null && ((List<WeatherApp.Models.WeatherInfo>)ViewBag.WeatherInfoList).Any())
+        {
+            foreach (var weather in (List<WeatherApp.Models.WeatherInfo>)ViewBag.WeatherInfoList)
+            {
+                <div class="col-md-2 col-sm-4 mb-4">
+                    <div class="card shadow-lg position-relative" style="border-radius: 8px; overflow: hidden;">
+                        <img src="~/images/weather/@IconHelper.GetLocalIcon(weather.Icon)" class="card-img-top" >
+                        <div class="card-body text-center p-2">
+                            <h6 class="card-title" style="font-size: 0.9rem; font-weight: bold;">@weather.City</h6>
+                            <p class="card-text mb-1" style="font-size: 0.8rem;">@weather.Description</p>
+                            <p class="card-text" style="font-size: 0.8rem;">Temperature: @weather.Temperature°C</p>
+                            <img 
+                                src="/images/icons/star-yellow.png" 
+                                class="favorite-icon" 
+                                alt="Remove Favorite" 
+                                style="cursor: pointer; height: 20px;"
+                                onclick="removeFavorite('@weather.City')"
+                            />
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p class="text-center mt-4" style="font-size: 1.2rem; color: #7f8c8d;">
+                You have no favorite cities yet. Add some to see weather updates!
+            </p>
+        }
+    </div>
+</div>
+
+<script>
+    function removeFavorite(city) {
+        fetch('/Users/RemoveFavorite', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(city)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`${city} has been removed from your favorites.`);
+                location.reload();
+            } else {
+                alert(data.message || 'Failed to remove the city. Please try again.');
+            }
+        })
+        .catch(error => console.error('Error removing favorite:', error));
+    }
+</script>
